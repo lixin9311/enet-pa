@@ -37,9 +37,9 @@ class SRGAN():
         self.lp = self.build_lp()
         self.lp.trainable = False
         self.lp.compile(loss=['mse', 'mse'],
-                         optimizer=optimizer,
-                         metrics=['accuracy'],
-                         loss_weights=[self.lp1_weight, self.lp2_weight])
+                        optimizer=optimizer,
+                        metrics=['accuracy'],
+                        loss_weights=[self.lp1_weight, self.lp2_weight])
 
         # Configure data loader
         self.dataset_name = 'BSDS200'
@@ -71,9 +71,11 @@ class SRGAN():
         # Discriminator determines validity of generated high res. images
         validity = self.discriminator(fake_hr)
 
-        self.combined = Model([img_lr, img_hr], [validity, fake_features[0], fake_features[1]])
+        self.combined = Model(
+            [img_lr, img_hr], [validity, fake_features[0], fake_features[1]])
         self.combined.compile(loss=['binary_crossentropy', 'mse', 'mse'],
-                              loss_weights=[1e-3, self.lp1_weight, self.lp2_weight],
+                              loss_weights=[
+                                  1, self.lp1_weight, self.lp2_weight],
                               optimizer=optimizer)
 
     def build_lp(self):
